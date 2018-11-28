@@ -12,7 +12,7 @@ public class Othello {
         int time_limit = Integer.parseInt(args[1]);
 
         AlphaBetaAlgorithm alphaBeta = new AlphaBetaAlgorithm();
-        //alphaBeta.setEvaluator(new WashingtonEvaluator());
+
         // Calculate the timestamp to stop the alpha-beta algorithm.
         // The -20 correspond (mostly) of the other computations.
         alphaBeta.setStopAt(System.currentTimeMillis() + time_limit * 1000 - 20);

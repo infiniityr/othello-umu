@@ -23,7 +23,7 @@ cd "$(dirname "$0")"
 if [ $do_compile -eq 1 ]; then
 	# Compile the code:
 	javac src/*.java -d out/ -g
+else
+	# Call your Java program with a position and time limit:
+	java -cp out Othello $position $time_limit
 fi
-
-# Call your Java program with a position and time limit:
-java -cp out Othello $position $time_limit

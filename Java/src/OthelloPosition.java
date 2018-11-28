@@ -17,6 +17,11 @@ public class OthelloPosition {
         this("WEEEEEEEEEEEEEEEEEEEEEEEEEEEOXEEEEEEXOEEEEEEEEEEEEEEEEEEEEEEEEEEE");
     }
 
+    /**
+     * Constructor of the OthelloPosition
+     * The input string must be 65 char long
+     * @param s
+     */
     public OthelloPosition(String s) {
         if (s.length() != 65) {
             throw new IllegalArgumentException("The input string must be 65 char long !");
@@ -42,6 +47,10 @@ public class OthelloPosition {
 
     }
 
+    /**
+     * Get all possible moves for the current player
+     * @return
+     */
     public LinkedList<OthelloAction> getMoves() {
         LinkedList<OthelloAction> actions = new LinkedList<>();
         for (int i = 0; i < BOARD_SIZE; i++) {
@@ -98,6 +107,25 @@ public class OthelloPosition {
         return false;
     }
 
+    /**
+     * Return true if there is a square of the player in the direction
+     *
+     * List of directions (incRow, incCol) :
+     * (1,1) : South-East
+     * (1,0) : South
+     * (1,-1): South-West
+     * (0,1) : East
+     * (0,-1): West
+     * (-1,1): North-East
+     * (-1,0): North
+     * (-1,-1):North-West
+     *
+     * @param i
+     * @param j
+     * @param incRow
+     * @param incCol
+     * @return
+     */
     private boolean checkDirection(int i, int j, int incRow, int incCol) {
         while ((i >= 0 && i < BOARD_SIZE) && (j >= 0 && j < BOARD_SIZE)) {
             if (this.isFree(i, j))
@@ -110,17 +138,33 @@ public class OthelloPosition {
         return false;
     }
 
+    /**
+     * Return true if the square (i, j) belongs to the current player
+     * @param i
+     * @param j
+     * @return
+     */
     private boolean isOwnSquare(int i, int j) {
         return (this.playerToMove && this.board[i][j] == 'O')
                 || (!this.playerToMove && this.board[i][j] == 'X');
     }
 
+    /**
+     * Return true if the square (i, j) belongs to the opponent
+     * @param i
+     * @param j
+     * @return
+     */
     private boolean isOpponentSquare(int i, int j) {
         return (this.playerToMove && this.board[i][j] == 'X')
                 || (!this.playerToMove && this.board[i][j] == 'O');
     }
 
-
+    /**
+     * Return an instance of OthelloPosition with an updated board for the input OthelloAction.
+     * @param action
+     * @return
+     */
     public OthelloPosition makeMove(OthelloAction action) {
         OthelloPosition nextPosition = this.clone();
 
@@ -157,6 +201,10 @@ public class OthelloPosition {
     }
 
 
+    /**
+     * Create a new instance of the current OthelloPosition
+     * @return
+     */
     @Override
     protected OthelloPosition clone() {
         return new OthelloPosition(this.toString());
@@ -212,21 +260,5 @@ public class OthelloPosition {
             }
         }
         return s;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        OthelloPosition that = (OthelloPosition) o;
-        return playerToMove == that.playerToMove &&
-                Arrays.equals(board, that.board);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = Objects.hash(playerToMove);
-        result = 31 * result + Arrays.hashCode(board);
-        return result;
     }
 }

@@ -35,10 +35,20 @@ public class AlphaBetaAlgorithm implements OthelloAlgorithm {
         this.depth = depth;
     }
 
+    /**
+     * Set the stop timestamp
+     * @param stopAt
+     */
     public void setStopAt (long stopAt) {
         this.stopAt = stopAt;
     }
 
+    /**
+     * Return the best action to perform for the input position
+     * @param position
+     * @return
+     * @throws TimeoutException
+     */
     @Override
     public OthelloAction evaluate(OthelloPosition position) throws TimeoutException {
         int A = Integer.MIN_VALUE, B = Integer.MAX_VALUE;
@@ -46,27 +56,40 @@ public class AlphaBetaAlgorithm implements OthelloAlgorithm {
         return bestAction;
     }
 
+    /**
+     * Get the best action to perform in the input position for the black player
+     * @param position
+     * @param depth
+     * @param alpha
+     * @param beta
+     * @return
+     * @throws TimeoutException
+     */
     public OthelloAction evaluateMin(OthelloPosition position, int depth, int alpha, int beta) throws TimeoutException {
         this.checkTime();
-        if (depth == 0) {
+        if (depth == 0) { // If we are at the root, return an empty action with the heuristic value
             OthelloAction a = new OthelloAction(0, 0);
             a.setValue(this.evaluator.evaluate(position));
             return a;
         }
 
+        // Get all possible moves for the black player in the input position
         LinkedList<OthelloAction> actions = position.getMoves();
 
-        if (actions.size() == 0) {
+        if (actions.size() == 0) { // If there is any moves, return an "pass" action
             OthelloAction a = new OthelloAction(0, 0, true);
             a.setValue(this.evaluator.evaluate(position));
             return a;
         }
+
         OthelloAction bestAction = new OthelloAction(0, 0, true);
         bestAction.setValue(Integer.MAX_VALUE);
 
         for (OthelloAction a : actions) {
+            // Simulate the action in the current position to get the nextPosition
             OthelloPosition nextPos = position.makeMove(a);
 
+            // Get the best action of the white player for the next position
             OthelloAction bestNextAction = this.evaluateMax(nextPos, depth - 1, alpha, beta);
             if (bestAction.getValue() > bestNextAction.getValue()) {
                 bestAction = a;
@@ -81,17 +104,27 @@ public class AlphaBetaAlgorithm implements OthelloAlgorithm {
         return bestAction;
     }
 
+    /**
+     * Get the best action to perform in the input position for the white player
+     * @param position
+     * @param depth
+     * @param alpha
+     * @param beta
+     * @return
+     * @throws TimeoutException
+     */
     public OthelloAction evaluateMax(OthelloPosition position, int depth, int alpha, int beta) throws TimeoutException {
         this.checkTime();
-        if (depth == 0) {
+        if (depth == 0) { // If we are at the root, return an empty action with the heuristic value
             OthelloAction a = new OthelloAction(0, 0);
             a.setValue(this.evaluator.evaluate(position));
             return a;
         }
 
+        // Get all possible moves for the white player in the input position
         LinkedList<OthelloAction> actions = position.getMoves();
 
-        if (actions.size() == 0) {
+        if (actions.size() == 0) { // If there is any moves, return an "pass" action
             OthelloAction a = new OthelloAction(0, 0, true);
             a.setValue(this.evaluator.evaluate(position));
             return a;
@@ -101,8 +134,10 @@ public class AlphaBetaAlgorithm implements OthelloAlgorithm {
         bestAction.setValue(Integer.MIN_VALUE);
 
         for (OthelloAction a : actions) {
+            // Simulate the action in the current position to get the nextPosition
             OthelloPosition nextPos = position.makeMove(a);
 
+            // Get the best action of the black player for the next position
             OthelloAction bestNextAction = this.evaluateMin(nextPos, depth - 1, alpha, beta);
             if (bestAction.getValue() < bestNextAction.getValue()) {
                 bestAction = a;
@@ -119,6 +154,10 @@ public class AlphaBetaAlgorithm implements OthelloAlgorithm {
         return bestAction;
     }
 
+    /**
+     * Throw an exception if the currentTime is greater than the stop timestamp.
+     * @throws TimeoutException
+     */
     public void checkTime() throws TimeoutException {
         if (System.currentTimeMillis() >= this.stopAt) {
             throw new TimeoutException();

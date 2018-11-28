@@ -1,9 +1,11 @@
 public class MiniMaxEvaluator implements OthelloEvaluator {
-
+    // Weight of the corners
     private static final int VALUE_CORNER = 5;
 
+    // Weight of the cells in the edges
     private static final int VALUE_EDGE = 2;
 
+    // Default weight of the cells
     private static final int VALUE = 1;
 
     @Override
@@ -38,6 +40,13 @@ public class MiniMaxEvaluator implements OthelloEvaluator {
         return evaluationW - evaluationB;
     }
 
+    /**
+     * Return true if the coordinate (i, j) is in a corner
+     * @param position
+     * @param i
+     * @param j
+     * @return
+     */
     private boolean isCorner(OthelloPosition position, int i, int j) {
         return  (i == 0 && j == 0) ||
                 (i == 0 && j == position.board.length - 1) ||
@@ -45,6 +54,13 @@ public class MiniMaxEvaluator implements OthelloEvaluator {
                 (i == position.board.length - 1 && j == position.board.length - 1);
     }
 
+    /**
+     * Return true if the coordinate (i, j) is in an edge
+     * @param position
+     * @param i
+     * @param j
+     * @return
+     */
     private boolean isEdge(OthelloPosition position, int i, int j) {
         return  i == 0 ||
                 i == position.board.length - 1 ||
